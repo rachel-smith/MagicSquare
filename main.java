@@ -1,120 +1,92 @@
-import java.util.*;
-import java.text.*;
-import java.io.*;
-/**
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+/*
  * Main class.
  * Will create Magic Square puzzles and check if puzzles are correct.
- * 
- * @author Nerissa Lemon & Rachel Smith 
+ *
+ * @author Nerissa Lemon & Rachel Smith
  * @version 09/03/2016
+ * References: http://www.guideforschool.com/1280095-java-program-to-print-magic-square-matrix/
+ *              Used for easy to follow algorithm to create magic square
+ *
+ *              http://mathworld.wolfram.com/MagicSquare.html
+ *              Used to understand the  math behind magic squares
  */
 
+public class main {
 
-public class main
-{
-    // instance variables 
-    private int x;
-    
-    /**
-     * Main method. Will run the Magic Square program.
-     */
-    public static void main(String[] args){
-        //test puzzles
-        //3x3
-        //4x4
-        int[] puzz1 = {0,0,10,32,0,12,20,0,28,0,0,0,2,24,0,26};
-        int magicNum1 = 68;
-        int[] ansPuzz1 = {8,18,10,32,30,12,20,6,28,14,22,4,2,24,16,26};
-        int[] puzz2 = {0,12,8,52,0,0,0,0,0,24,28,48,0,0,56,4};
-        int magicNum2 = 136;
-        int[] ansPuzz2 = {64,12,8,52,20,40,44,32,36,24,28,48,16,60,56,4};
-        
-        //Print puzzles 
-        //4x4
-        System.out.println("Puzzle 1 (4x4)");
-        print4by4(puzz1);
-        System.out.println("Puzzle 2 (4x4)");
-        print4by4(puzz2);
-        System.out.println("Answers: \n Puzzle 1 (4x4): \n");
-        print4by4(ansPuzz1);
-        System.out.println("Puzzle 2 (4x4)\n");
-        print4by4(ansPuzz2);
-        
-        System.out.println("Puzzle Checker");
-        Scanner keyboard = new Scanner(System.in);
-        System.out.println("Please enter 4 for 4x4 puzzle or 3 for 3x3 puzzle and press enter. ");
-        String userChoice = keyboard.nextLine();
-        System.out.println("Please enter the magic number for the puzzle.");
-        String userMagicNumber = keyboard.nextLine();
-        System.out.println("Please enter the path for your file containing your solution. ");
-        String answerFile = keyboard.nextLine();
-        
-        //Get user file, read and store.
-        File userFile = new File(answerFile);
-        try{
-            Scanner fileScanner = new Scanner (userFile);
-            int[] userAnswer = new int [16];
-            int j = 0;
-            while (fileScanner.hasNextInt()){
-                userAnswer[j] = fileScanner.nextInt();
-                j++;
+    public static void main(String[] args) throws IOException {
+      
+        System.out.println("Enter the dimension of the matrix (Odd dimension only): ");
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        int n=Integer.parseInt(br.readLine());
+        if(n%2!=0) {
+        int box[][]=new int[n][n];
+        int firstEle=(int)(Math.random()*100);
+        System.out.println("Enter the difficulty of your game: 1 for easy, 2 for challenging, 3 for hard ");
+        BufferedReader levelBuffer= new BufferedReader(new InputStreamReader(System.in));
+        int level = Integer.parseInt(levelBuffer.readLine());
+        int difficulty;
+        if (level ==1) {difficulty = 5;}
+        else if (level ==2) {difficulty = 7;}
+        else {difficulty = 8;}
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                box[i][j]=0;
             }
-            System.out.println("File input complete!");
         }
-        catch(FileNotFoundException fe){
-            System.out.println("File not found :(");
+        int row=0;
+        int col=n/2;
+        for (int p = 0; p < n*n; p++) {
+                box[row][col]=firstEle;
+                firstEle++;
+                row--;
+                col++;
+                if(row==-1)
+                   row=n-1;
+                if(col==n)
+                   col=0;
+                if(row==n-1 && col==0)
+                {
+                    row=1;
+                    col=n-1;
+                }
+              if((box[row][col]!=0)) {
+                   row+=2;
+                   col--;
+                 if(row==-1) row=0;
+                if(col==-1) col=0;
+            }
         }
-        //Check if solution was correct and alert user. 
-        
-        
-       
-        
-    }
-    
-    public static void print4by4(int[] arrToPrint){
-        for(int i = 0; i < arrToPrint.length; i++){
-                if(arrToPrint[i] == 0)
-                    System.out.print(" _ ");
+        System.out.println("Magic Box");
+         for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+              int num = (int)(Math.random()*10);
+              if(num <= difficulty){
+                if(box[i][j]/10==0)
+                    System.out.print( "x    ");
                 else
-                    System.out.print(" "+arrToPrint[i]+" ");
-                
-                if( i==3 || i == 7 || i == 11 || i == 15)
-                   System.out.print("\n");
+                    System.out.print( "x    ");
+              }
+              else {
+                if(box[i][j]/10==0)
+                    System.out.print( box[i][j]+"    ");
+                else
+                    System.out.print( box[i][j]+"   ");
+              }
+
             }
-    
-    }
+             System.out.println("");
+        }
 
-    /**
-     * Constructor for objects of class main
-     */
-    public main()
-    {
-        // initialise instance variables
-        x = 1;
-        int y=1;
-        if (!(x==0) && !(y==1)){
-            System.out.println("&& logic worked");
-            System.out.println("DIE HERE");
-        }
-        //else 
-        if(!(x==0) || !(y==1)){
-            System.out.println("|| logic worked");
-            System.out.println("DIE HERE");
-        }
-        else{
-            System.out.println("both params didn't pass");
-        }
-    }
+        int magicNum = 0;
 
-    /**
-     * An example of a method - replace this comment with your own
-     * 
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+        for (int i = 0; i < n; i++){
+          magicNum += box[i][i];
+        }
+
+        System.out.println("Magic number is: " + magicNum);
     }
+}
 }
