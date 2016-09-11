@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.*;
+import java.text.*;
+import java.io.*;
 /*
  * Main class.
  * Will create Magic Square puzzles and check if puzzles are correct.
@@ -59,34 +62,59 @@ public class main {
                 if(col==-1) col=0;
             }
         }
-        System.out.println("Magic Box");
-         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-              int num = (int)(Math.random()*10);
-              if(num <= difficulty){
-                if(box[i][j]/10==0)
-                    System.out.print( "x    ");
-                else
-                    System.out.print( "x    ");
-              }
-              else {
-                if(box[i][j]/10==0)
-                    System.out.print( box[i][j]+"    ");
-                else
-                    System.out.print( box[i][j]+"   ");
-              }
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            Date myDate = new Date();
+            String fileName = dateFormat.format(myDate)+".txt";
+            try{
+                PrintWriter out = new PrintWriter(fileName);
+                int magicNum = 0;
+                
+                for (int i = 0; i < n; i++){
+                    magicNum += box[i][i];
+                }
 
+                out.print("Magic Square. Magic Number = " + magicNum+"\n");
+                double width = n * 7;
+                String longBar = "";
+                while(width != 0){
+                    longBar = longBar + "-";
+                    width--;
+                }
+                
+                out.print(longBar+"\n");
+                for (int i = 0; i < n; i++) {
+                    for (int j = 0; j < n; j++) {
+                        int num = (int)(Math.random()*10);
+                        if(num <= difficulty){
+                            if(box[i][j]/10==0)
+                                out.print( "|     |");
+                            else
+                                out.print( "|     |");
+                        }
+                        else {
+                            if(box[i][j]/10==0)
+                                out.print( "|  "+box[i][j]+"  |");
+                            else
+                                out.print( "| "+box[i][j]+"  |");
+                        }
+                        
+                    }
+                    out.print("");
+                    out.print("\n"+longBar+"\n");
+                }
+                
+                out.flush();
+                out.close();
+                
+                System.out.println("File " + fileName + " was succesfully created. It contains the puzzle you created.");
+                
+                
+            }catch (FileNotFoundException fnfe){
+                System.out.println("Something went wrong. Please restart program and try again.");
             }
-             System.out.println("");
-        }
-
-        int magicNum = 0;
-
-        for (int i = 0; i < n; i++){
-          magicNum += box[i][i];
-        }
-
-        System.out.println("Magic number is: " + magicNum);
+           
+            
+        
     }
 }
 }
